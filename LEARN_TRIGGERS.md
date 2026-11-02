@@ -48,6 +48,7 @@ Not sure what a setting does? Hover over it in Unity. The small book icon on the
 | A hole or ring for a plug | **SPS Socket** | How deep |
 | A plug | **SPS Plug** | How deep |
 | A touch area through VRCFury | **Touch Zone** | How close |
+| To use a contact or socket my avatar already has | **Existing** | Whatever it already reports |
 
 You can put as many on one avatar as you like. Each needs its own **ID**.
 
@@ -77,6 +78,46 @@ Sockets and plugs are made with VRCFury's SPS.
 - A socket starts turned **off**. Turn it on in game from the **SPS** folder of your Expressions menu.
 - A plug needs a mesh. Set **Plug mesh**, or leave it empty and VRCFury looks for one.
 - SPS needs even scale, so the object and all its parents must have X, Y and Z equal.
+
+## Using what your avatar already has
+
+Many avatars already come with contacts, like a headpat or a boop made for an animation. VRCFury sockets, plugs and Touch Zones count too. You don't need to rebuild any of it. An **Existing** trigger reads what's there and adds a rule for it. Nothing new goes on the avatar, and the original isn't changed.
+
+### The quick way: scan
+
+1. Open **Tools > ADVOSC Triggers** and pick your avatar.
+2. Press **Scan avatar for existing contacts**. You get a list of everything that has no trigger yet.
+3. Press **Add** next to the ones you want, or **Add all**.
+4. Pick a **Starter rule** on each new trigger.
+5. Press **Open in ADVOSC**, and add the rules.
+
+### By hand
+
+1. Add an **ADVOSC Trigger** to any object on the avatar.
+2. Set **Type** to **Existing**.
+3. Drag the contact or VRCFury component into **Reads**. Dragging its object works too.
+
+The trigger then shows what the rule will listen to. For a contact it also shows what the contact reports and who can touch it. Those come from the contact, so to change them, change the contact.
+
+### If a rule never fires
+
+Some tools rename parameters during the build, so the name in Unity isn't always the name in game. Unity warns you when it can't find a contact's name on the avatar.
+
+1. In VRChat, touch the contact.
+2. In ADVOSC, open the OSC page and find the parameter that moved.
+3. Copy its name into **Name override** on the trigger, then press **Open in ADVOSC** again.
+
+A VRCFury socket, plug or Touch Zone with no name set gets its name from its object through VRCFury's own rules. The trigger can't work that name out, so it asks you to set a name on the component or type it in **Name override**. Until then, that trigger can't be exported. Your avatar still builds fine.
+
+### You can also skip Unity
+
+An avatar you can't open in Unity still works. In ADVOSC, make a rule on Automations, set the source to **An avatar parameter**, and pick or type the name.
+
+SPS depth is listed there too, once a socket is sending. Turn on **Keep SPS haptics on** in ADVOSC's Settings, turn the socket on in game, and touch it once.
+
+### Before you connect a toy
+
+Check who can touch the contact. Most contacts made for animations allow anyone, so anyone near you can fire a toy rule on one. Unity warns you when that applies.
 
 ## Who can trigger it?
 

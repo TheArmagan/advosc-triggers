@@ -94,6 +94,9 @@ namespace ADVOSC.Triggers.Editor {
                     CheckTags(trigger, issues);
                     CheckPlan(trigger, issues);
                     break;
+                case TriggerKind.Existing:
+                    CheckExisting(trigger, issues);
+                    break;
             }
         }
 
@@ -146,6 +149,50 @@ namespace ADVOSC.Triggers.Editor {
             if (!ContactPlan.TryCreate(trigger, out _, out var error)) {
                 Add(issues, trigger, IssueSeverity.Error, error);
             }
+        }
+
+        /// <summary>None of these stop a build, since nothing here builds anything. They stop an export.</summary>
+        private static void CheckExisting(AdvoscTrigger trigger, List<TriggerIssue> issues) {
+            var target = trigger.existingComponent;
+            if (target == null) {
+                AddRuleBlocker(issues, trigger, "Pick the contact, socket, plug or Touch Zone this trigger reads.");
+                return;
+            }
+
+            var type = ExistingTargets.TypeOf(target);
+            if (type == ExistingType.None) {
+                AddRuleBlocker(issues, trigger, "This has to be a VRC Contact Receiver, or a VRCFury socket, plug or Touch Zone.");
+                return;
+            }
+
+            var descriptor = trigger.GetComponentInParent<VRCAvatarDescriptor>(true);
+            if (descriptor != null && !target.transform.IsChildOf(descriptor.transform)) {
+                AddRuleBlocker(issues, trigger, "What this trigger reads must be part of the same avatar.");
+                return;
+            }
+
+            var name = ExistingTargets.NameOf(trigger);
+            if (string.IsNullOrEmpty(name)) {
+                AddRuleBlocker(issues, trigger, type == ExistingType.Contact
+                    ? "This contact has no parameter, so it can't send anything. Set one on the contact."
+                    : "VRCFury makes this one's name from the object's name. Set a name on the VRCFury component, or type it in Name override. the OSC page in ADVOSC shows the real one.");
+                return;
+            }
+
+            if (type != ExistingType.Contact) return;
+
+            if (descriptor != null && string.IsNullOrWhiteSpace(trigger.existingName) && !ExistingTargets.IsOnAvatar(descriptor, name)) {
+                Add(issues, trigger, IssueSeverity.Warning, $"'{name}' isn't in this avatar's animators or parameters. A tool may add or rename it during the build. If the rule never fires, find the real name on the OSC page in ADVOSC and put it in Name override.");
+            }
+
+            var receiver = (ContactReceiver)target;
+            if (receiver.allowOthers && trigger.starterRule == StarterRuleChoice.Toy) {
+                Add(issues, trigger, IssueSeverity.Warning, "This contact can be touched by other people, so anyone nearby can fire this toy rule.");
+            }
+        }
+
+        private static void AddRuleBlocker(List<TriggerIssue> issues, AdvoscTrigger trigger, string message) {
+            issues.Add(new TriggerIssue { Trigger = trigger, Severity = IssueSeverity.Warning, Message = message, BlocksExport = true });
         }
 
         private static void CheckOwnBody(AdvoscTrigger trigger, List<TriggerIssue> issues) {

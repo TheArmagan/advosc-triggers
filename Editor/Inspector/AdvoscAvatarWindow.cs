@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using VRC.SDK3.Avatars.Components;
@@ -11,6 +12,10 @@ namespace ADVOSC.Triggers.Editor {
     internal sealed class AdvoscAvatarWindow : EditorWindow {
         [SerializeField] private VRCAvatarDescriptor avatar;
         private Vector2 scroll;
+
+        // Components can't survive a domain reload here, so a reload just means scanning again.
+        private List<Component> scanned;
+        private VRCAvatarDescriptor scannedAvatar;
 
         [MenuItem("Tools/ADVOSC Triggers")]
         private static void Open() {
@@ -41,13 +46,16 @@ namespace ADVOSC.Triggers.Editor {
             }
 
             var triggers = TriggerValidator.FindTriggers(avatar.gameObject);
+            scroll = EditorGUILayout.BeginScrollView(scroll);
+            DrawScan();
+
             if (triggers.Length == 0) {
-                EditorGUILayout.HelpBox("This avatar has no triggers yet. Add an ADVOSC Trigger component to an object on it.", MessageType.Info);
+                EditorGUILayout.EndScrollView();
+                EditorGUILayout.HelpBox("This avatar has no triggers yet. Add an ADVOSC Trigger component to an object on it, or scan for what it already has.", MessageType.Info);
                 return;
             }
 
             EditorGUILayout.Space();
-            scroll = EditorGUILayout.BeginScrollView(scroll);
             var issues = TriggerValidator.ValidateAvatar(avatar);
             foreach (var trigger in triggers) {
                 DrawTrigger(trigger);
@@ -60,6 +68,48 @@ namespace ADVOSC.Triggers.Editor {
 
             EditorGUILayout.Space();
             ExportButtons.Draw(avatar);
+        }
+
+        private void DrawScan() {
+            if (GUILayout.Button(new GUIContent("Scan avatar for existing contacts", TriggerHelp.Scan))) {
+                scanned = ExistingTargets.Scan(avatar);
+                scannedAvatar = avatar;
+            }
+
+            if (scanned == null || scannedAvatar != avatar) return;
+            scanned.RemoveAll(component => component == null);
+
+            if (scanned.Count == 0) {
+                EditorGUILayout.HelpBox("Nothing new found on this avatar.", MessageType.Info);
+                return;
+            }
+
+            Component added = null;
+            foreach (var component in scanned) {
+                EditorGUILayout.BeginHorizontal();
+                var name = ExistingTargets.ReadName(component);
+                var label = string.IsNullOrWhiteSpace(name) ? component.gameObject.name + " (no name set)" : name;
+                EditorGUILayout.LabelField(new GUIContent(label, label), new GUIContent(ExistingTargets.Label(ExistingTargets.TypeOf(component))));
+                if (GUILayout.Button(new GUIContent("Add", TriggerHelp.ScanAdd), GUILayout.Width(60f))) {
+                    added = component;
+                }
+                EditorGUILayout.EndHorizontal();
+            }
+
+            if (added != null) {
+                ExistingTargets.Add(added, avatar);
+                scanned.Remove(added);
+            }
+
+            if (GUILayout.Button(new GUIContent($"Add all {scanned.Count}", TriggerHelp.ScanAddAll))) {
+                Undo.SetCurrentGroupName("Add ADVOSC Triggers");
+                var group = Undo.GetCurrentGroup();
+                foreach (var component in scanned) {
+                    ExistingTargets.Add(component, avatar);
+                }
+                Undo.CollapseUndoOperations(group);
+                scanned.Clear();
+            }
         }
 
         private static void DrawTrigger(AdvoscTrigger trigger) {

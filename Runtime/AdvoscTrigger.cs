@@ -14,7 +14,8 @@ namespace ADVOSC.Triggers {
         SpsPlug,
         TouchZone,
         ContactPreset,
-        CustomContact
+        CustomContact,
+        Existing
     }
 
     public enum TriggerWho {
@@ -103,6 +104,12 @@ namespace ADVOSC.Triggers {
         public float customHeight = 0.3f;
         public TriggerReceiverType customReceiverType = TriggerReceiverType.Proximity;
         public List<string> customTags = new List<string> { "Hand", "Finger" };
+
+        /// <summary>The contact or VRCFury component an Existing trigger reads. Nothing is built for it.</summary>
+        public Component existingComponent;
+
+        /// <summary>Replaces the name read from it, for when a tool renames it during the build.</summary>
+        public string existingName = "";
 
         public static bool IsValidId(string value) {
             return value != null && IdPattern.IsMatch(value);

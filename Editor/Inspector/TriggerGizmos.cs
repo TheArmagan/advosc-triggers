@@ -26,6 +26,8 @@ namespace ADVOSC.Triggers.Editor {
                         Gizmos.DrawWireSphere(trigger.transform.position, trigger.customRadius);
                     }
                     break;
+                case TriggerKind.Existing:
+                    break;
                 default:
                     if (ContactPlan.TryCreate(trigger, out var plan, out _)) {
                         DrawContact(plan);

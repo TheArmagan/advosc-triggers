@@ -16,7 +16,8 @@ namespace ADVOSC.Triggers.Editor {
             "SPS Plug: the part that goes into a socket. Reports how deep.\n" +
             "Touch Zone: an area on a plug or body part that reports touch through VRCFury.\n" +
             "Contact Preset: a ready-made touch spot, like a headpat.\n" +
-            "Custom Contact: a touch spot where you pick the shape and size.";
+            "Custom Contact: a touch spot where you pick the shape and size.\n" +
+            "Existing: reads a contact, socket, plug or Touch Zone already on the avatar, and adds nothing to it.";
 
         public const string Id =
             "A short name for this trigger, used in the parameter name ADVOSC listens to.\n\n" +
@@ -91,6 +92,28 @@ namespace ADVOSC.Triggers.Editor {
 
         public const string CustomTags =
             "What can touch this. VRChat's standard tags are Head, Torso, Hand, Foot and Finger.";
+
+        public const string ExistingComponent =
+            "The contact or VRCFury component to read. Drag it in from the Hierarchy. It isn't changed, and nothing new is added to the avatar.";
+
+        public const string ExistingUseHere = "Uses the contact or VRCFury component on this same object.";
+
+        public const string ExistingName =
+            "The name the rule listens to. This comes from the component on its own, so leave it empty unless the rule never fires.\n\n" +
+            "Some tools rename parameters during the build. If yours does, copy the real name from the OSC page in ADVOSC.";
+
+        public const string ExistingListensTo = "The value the rule in ADVOSC will read.";
+
+        public const string ExistingReports = "On or off for a Constant or On Enter contact, and 0 to 1 for how close on a Proximity contact.";
+
+        public const string ExistingTouchedBy = "Set on the contact itself. An Existing trigger can't change who touches it.";
+
+        public const string Scan =
+            "Lists contacts and VRCFury sockets, plugs and Touch Zones already on this avatar that have no trigger yet. Nothing changes until you press Add.";
+
+        public const string ScanAdd = "Adds an ADVOSC Trigger next to this component so its rule gets exported. The component itself isn't changed.";
+
+        public const string ScanAddAll = "Adds an ADVOSC Trigger for everything in this list. Undo takes them all back off.";
 
         public const string WindowAvatar = "The avatar to work on. Selecting anything on an avatar picks it here too.";
 

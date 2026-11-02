@@ -5,6 +5,7 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using VRC.Dynamics;
 using VRC.SDK3.Avatars.Components;
 
 namespace ADVOSC.Triggers.Editor {
@@ -16,7 +17,8 @@ namespace ADVOSC.Triggers.Editor {
             new GUIContent("SPS Plug"),
             new GUIContent("Touch Zone"),
             new GUIContent("Contact Preset"),
-            new GUIContent("Custom Contact")
+            new GUIContent("Custom Contact"),
+            new GUIContent("Existing")
         };
 
         private static readonly GUIContent[] WhoLabels = {
@@ -62,6 +64,8 @@ namespace ADVOSC.Triggers.Editor {
         private SerializedProperty customHeight;
         private SerializedProperty customReceiverType;
         private SerializedProperty customTags;
+        private SerializedProperty existingComponent;
+        private SerializedProperty existingName;
 
         private void OnEnable() {
             kind = serializedObject.FindProperty(nameof(AdvoscTrigger.kind));
@@ -81,6 +85,8 @@ namespace ADVOSC.Triggers.Editor {
             customHeight = serializedObject.FindProperty(nameof(AdvoscTrigger.customHeight));
             customReceiverType = serializedObject.FindProperty(nameof(AdvoscTrigger.customReceiverType));
             customTags = serializedObject.FindProperty(nameof(AdvoscTrigger.customTags));
+            existingComponent = serializedObject.FindProperty(nameof(AdvoscTrigger.existingComponent));
+            existingName = serializedObject.FindProperty(nameof(AdvoscTrigger.existingName));
         }
 
         public override void OnInspectorGUI() {
@@ -89,7 +95,9 @@ namespace ADVOSC.Triggers.Editor {
             Popup(kind, new GUIContent("Type", TriggerHelp.Type), KindLabels);
             EditorGUILayout.PropertyField(id, new GUIContent("ID", TriggerHelp.Id));
             EditorGUILayout.PropertyField(displayName, new GUIContent("Display name", TriggerHelp.DisplayName));
-            Popup(who, new GUIContent("Who can trigger it", TriggerHelp.Who), WhoLabels);
+            if (!IsExistingContact()) {
+                Popup(who, new GUIContent("Who can trigger it", TriggerHelp.Who), WhoLabels);
+            }
 
             EditorGUILayout.Space();
             if (kind.hasMultipleDifferentValues) {
@@ -130,6 +138,10 @@ namespace ADVOSC.Triggers.Editor {
                 case TriggerKind.CustomContact:
                     DrawCustomContactSettings();
                     break;
+
+                case TriggerKind.Existing:
+                    DrawExistingSettings();
+                    break;
             }
         }
 
@@ -162,6 +174,57 @@ namespace ADVOSC.Triggers.Editor {
             EditorGUILayout.PropertyField(customReceiverType, new GUIContent("Reports", TriggerHelp.CustomReports));
             EditorGUILayout.PropertyField(customTags, new GUIContent("Touched by", TriggerHelp.CustomTags), true);
             EditorGUILayout.HelpBox("Standard tags are Head, Torso, Hand, Foot and Finger.", MessageType.None);
+        }
+
+        /// <summary>A contact's own settings decide who touches it, so the dropdown would do nothing.</summary>
+        private bool IsExistingContact() {
+            if (kind.hasMultipleDifferentValues || kind.enumValueIndex != (int)TriggerKind.Existing) return false;
+            return ExistingTargets.TypeOf(existingComponent.objectReferenceValue as Component) == ExistingType.Contact;
+        }
+
+        private void DrawExistingSettings() {
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(existingComponent, new GUIContent("Reads", TriggerHelp.ExistingComponent));
+            if (EditorGUI.EndChangeCheck()) {
+                // Dragging in an object picks its Transform, which is never what's meant here.
+                var dropped = existingComponent.objectReferenceValue as Component;
+                if (dropped != null && ExistingTargets.TypeOf(dropped) == ExistingType.None) {
+                    existingComponent.objectReferenceValue = ExistingTargets.FindOn(dropped.gameObject);
+                }
+            }
+
+            if (existingComponent.hasMultipleDifferentValues || targets.Length != 1) return;
+
+            var picked = existingComponent.objectReferenceValue as Component;
+            if (picked == null) {
+                var here = ExistingTargets.FindOn(((AdvoscTrigger)target).gameObject);
+                if (here != null && GUILayout.Button(new GUIContent($"Use the {ExistingTargets.Label(ExistingTargets.TypeOf(here))} on this object", TriggerHelp.ExistingUseHere))) {
+                    existingComponent.objectReferenceValue = here;
+                }
+                return;
+            }
+
+            EditorGUILayout.PropertyField(existingName, new GUIContent("Name override", TriggerHelp.ExistingName));
+            DrawExistingSummary(picked);
+        }
+
+        private void DrawExistingSummary(Component picked) {
+            var trigger = (AdvoscTrigger)target;
+            var rules = StarterRules.Build(trigger);
+            if (rules.Count > 0) {
+                EditorGUILayout.LabelField(new GUIContent("Listens to", TriggerHelp.ExistingListensTo), new GUIContent(rules[0].Address, rules[0].Address));
+            }
+
+            if (!(picked is ContactReceiver receiver)) return;
+
+            var reports = ExistingTargets.IsConstant(receiver) ? "On or off" : "0 to 1 for how close";
+            EditorGUILayout.LabelField(new GUIContent("Reports", TriggerHelp.ExistingReports), new GUIContent(reports));
+
+            var touchedBy = receiver.allowSelf && receiver.allowOthers ? "You and other people"
+                : receiver.allowOthers ? "Other people"
+                : receiver.allowSelf ? "Only you"
+                : "Nobody";
+            EditorGUILayout.LabelField(new GUIContent("Touched by", TriggerHelp.ExistingTouchedBy), new GUIContent(touchedBy));
         }
 
         private static void DrawSingleTargetFooter(AdvoscTrigger trigger) {

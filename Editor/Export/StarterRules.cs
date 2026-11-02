@@ -55,6 +55,10 @@ namespace ADVOSC.Triggers.Editor {
                     }
                     break;
 
+                case TriggerKind.Existing:
+                    AddExistingSources(trigger, name, sources);
+                    break;
+
                 default:
                     sources.Add(new Source {
                         Key = trigger.id,
@@ -73,6 +77,47 @@ namespace ADVOSC.Triggers.Editor {
                 Name = name,
                 Address = TriggerNames.TouchZoneAddress(trigger, side)
             };
+        }
+
+        private static void AddExistingSources(AdvoscTrigger trigger, string name, List<Source> sources) {
+            var target = trigger.existingComponent;
+            var targetName = ExistingTargets.NameOf(trigger);
+
+            switch (ExistingTargets.TypeOf(target)) {
+                case ExistingType.Contact:
+                    sources.Add(new Source {
+                        Key = trigger.id,
+                        Name = name,
+                        Address = TriggerNames.ParameterAddress(ExistingTargets.ToOscName(targetName)),
+                        IsBool = ExistingTargets.IsConstant(target)
+                    });
+                    break;
+
+                case ExistingType.Socket:
+                case ExistingType.Plug:
+                    var kind = ExistingTargets.TypeOf(target) == ExistingType.Plug ? "plug" : "socket";
+                    sources.Add(new Source {
+                        Key = trigger.id,
+                        Name = name,
+                        Address = TriggerNames.SpsDepthAddress(kind, ExistingTargets.ToOscId(targetName), trigger.who),
+                        IsSpsDepth = true
+                    });
+                    break;
+
+                case ExistingType.TouchZone:
+                    var zone = ExistingTargets.ToOscId(targetName);
+                    if (trigger.who == TriggerWho.Both) {
+                        sources.Add(ExistingZoneSource($"{trigger.id}-self", $"{name} (self)", zone, TriggerWho.Self));
+                        sources.Add(ExistingZoneSource($"{trigger.id}-others", $"{name} (others)", zone, TriggerWho.Others));
+                    } else {
+                        sources.Add(ExistingZoneSource(trigger.id, name, zone, trigger.who));
+                    }
+                    break;
+            }
+        }
+
+        private static Source ExistingZoneSource(string key, string name, string zone, TriggerWho side) {
+            return new Source { Key = key, Name = name, Address = TriggerNames.TouchZoneAddress(zone, side) };
         }
 
         private static bool IsConstantContact(AdvoscTrigger trigger) {

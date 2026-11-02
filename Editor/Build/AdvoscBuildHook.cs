@@ -29,7 +29,8 @@ namespace ADVOSC.Triggers.Editor {
             new SocketGenerator(),
             new PlugGenerator(),
             new TouchZoneGenerator(),
-            new ContactGenerator()
+            new ContactGenerator(),
+            new ExistingGenerator()
         };
 
         public bool OnPreprocessAvatar(GameObject avatarObject) {

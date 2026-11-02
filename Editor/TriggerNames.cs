@@ -21,15 +21,26 @@ namespace ADVOSC.Triggers.Editor {
             return AvatarParameterPrefix + ContactParameter(trigger);
         }
 
+        public static string ParameterAddress(string parameter) {
+            return AvatarParameterPrefix + parameter;
+        }
+
         public static string TouchZoneAddress(AdvoscTrigger trigger, TriggerWho side) {
-            return $"{AvatarParameterPrefix}VFH/Zone/Touch/{trigger.id}/{(side == TriggerWho.Self ? "Self" : "Others")}";
+            return TouchZoneAddress(trigger.id, side);
+        }
+
+        public static string TouchZoneAddress(string id, TriggerWho side) {
+            return $"{AvatarParameterPrefix}VFH/Zone/Touch/{id}/{(side == TriggerWho.Self ? "Self" : "Others")}";
         }
 
         /// <summary>The derived depth for this trigger's Self, Others or Both setting.</summary>
         public static string SpsDepthAddress(AdvoscTrigger trigger) {
-            var kind = trigger.kind == TriggerKind.SpsPlug ? "plug" : "socket";
+            return SpsDepthAddress(trigger.kind == TriggerKind.SpsPlug ? "plug" : "socket", trigger.id, trigger.who);
+        }
+
+        public static string SpsDepthAddress(string kind, string id, TriggerWho who) {
             string metric;
-            switch (trigger.who) {
+            switch (who) {
                 case TriggerWho.Self:
                     metric = "depthSelf";
                     break;
@@ -40,7 +51,7 @@ namespace ADVOSC.Triggers.Editor {
                     metric = "depth";
                     break;
             }
-            return $"/advosc/sps/{kind}/{trigger.id}/{metric}";
+            return $"/advosc/sps/{kind}/{id}/{metric}";
         }
     }
 }

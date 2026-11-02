@@ -57,7 +57,9 @@ Generated contacts sit behind one toggle in an "ADVOSC Triggers" submenu in the 
 
 ## Trigger kinds
 
-Every parameter is local and unsynced, so triggers cost no network bits. Other players don't receive these values.
+Every parameter this package adds is local and unsynced, so it costs no network bits, and other players don't receive these values. Existing triggers add no parameters.
+
+For contacts an avatar already has, **Tools > ADVOSC Triggers** can scan for them. See [Using what your avatar already has](LEARN_TRIGGERS.md#using-what-your-avatar-already-has).
 
 | Kind | Adds to the avatar | Rule source in ADVOSC |
 |---|---|---|
@@ -66,6 +68,7 @@ Every parameter is local and unsynced, so triggers cost no network bits. Other p
 | Touch Zone | VRCFury Touch Zone | `/avatar/parameters/VFH/Zone/Touch/<id>/Self` or `/Others` |
 | Contact preset | Local contact receiver for headpat, boop, cheek, hand, shoulder, hug or foot | `/avatar/parameters/ADVOSC/<id>` |
 | Custom contact | Local contact receiver with your own shape and tags | `/avatar/parameters/ADVOSC/<id>` |
+| Existing | Nothing. Reads a contact, socket, plug or Touch Zone already on the avatar | Same as that component |
 
 SPS metrics are computed by ADVOSC from the raw `OGB/*` values:
 
