@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.1.0 (unreleased)
+## 0.1.0 (2026-11-02)
 
-First version. It hasn't been tested in VRChat yet: SPS data over OSC and the depth formula are unverified.
+First version. Tested in VRChat with contacts and a small test plug and ring.
 
 ### Added
 

@@ -155,4 +155,4 @@ You get two kinds of switch in your Expressions menu:
 
 ## Good to know
 
-This is an early release. Touch contacts are simple, but SPS depth values haven't been measured with a real plug yet, so depth may feel off. See the note at the top of the [README](README.md).
+This is an early release. Contacts and SPS have been tested in VRChat with a small test plug and ring. If depth feels off with your own plug, change the rule's range in ADVOSC.

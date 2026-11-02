@@ -94,6 +94,6 @@ ADVOSC computes these from the raw `OGB/*` values. They are internal: packets fr
 - `kind`: `socket` or `plug`
 - `metric`: `depth`, `depthSelf`, `depthOthers` (0 to 1), `active` (0 or 1), `speed` (depth change per second, 0 or above)
 
-## Unverified
+## Depth
 
-Nobody has yet tested this in VRChat. Before relying on it, confirm that `OGB/*` floats arrive over OSC, and measure real plug values for the depth formula. That formula lives in one function in `src/engine/vrc-osc/sps.ts`.
+`OGB/*` floats arrive over OSC, tested in VRChat with a small test plug and ring. The depth formula lives in one function in `src/engine/vrc-osc/sps.ts`.

@@ -4,12 +4,7 @@ A Unity package for VRChat avatars. It adds SPS sockets, plugs, Touch Zones and 
 
 Package id: `rest.armagan.advosc-triggers`
 
-## Not tested in VRChat yet
-
-Version 0.1.0 has not been run in game. Two things are unverified:
-
-- Whether VRChat sends VRCFury's `OGB/*` SPS floats over OSC. Socket and plug rules depend on this, and they won't fire if those values don't arrive.
-- The SPS depth formula, which hasn't been measured against real plug values. `depth`, `depthSelf`, `depthOthers` and `speed` may read wrong even if the data does arrive.
+Tested in VRChat with contacts and a small test plug and ring. Depth comes from VRCFury's contact layout, so check how it feels with your own plug.
 
 New here? [Learn ADVOSC Triggers](LEARN_TRIGGERS.md) walks you through your first trigger, what each option does, and what to do when something doesn't work.
 
