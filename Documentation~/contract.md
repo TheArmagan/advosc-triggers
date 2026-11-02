@@ -8,8 +8,8 @@ What the Unity package writes and what ADVOSC reads. The TypeScript source of tr
 {
   "kind": "advosc.automation.bundle",
   "version": 1,
-  "name": "MANUKA triggers",
-  "avatarName": "MANUKA",
+  "name": "My avatar triggers",
+  "avatarName": "My avatar",
   "avatarIds": ["avtr_00000000-0000-0000-0000-000000000000"],
   "rules": [
     {
@@ -60,7 +60,15 @@ Anything else makes ADVOSC reject the whole bundle.
 | `sound` | Placeholder only: `soundIds` and `soundNames` must be empty. `loop` and `stopOnEnd` are booleans. |
 | `toy` | `action.kind` of `link` (only on `live`), `pulse`, `preset` or `stop`. `target.toyIds` must be `[]`. Never `pattern`. |
 
-Toy limits: `level` 0 to 1, `seconds` above 0 and at most 60, `preset` of `pulse`, `wave`, `fireworks` or `earthquake`. `target.features` come from `Vibrate`, `Rotate`, `Pump`, `Thrusting`, `Fingering`, `Suction`, `Depth`, `Stroke`, `Oscillate`.
+Toy limits: `level` 0 to 1, `seconds` above 0 and at most 60, `preset` of `pulse`, `wave`, `fireworks` or `earthquake`. `target.features` must not be empty and come from `Vibrate`, `Rotate`, `Pump`, `Thrusting`, `Fingering`, `Suction`, `Depth`, `Stroke`, `Oscillate`.
+
+Other limits:
+
+- `key` matches `[A-Za-z0-9_-]{1,64}` and is unique within a bundle.
+- Names are at most 120 characters, `match` and `releaseMatch` 128, values 512, addresses 256.
+- Each rule has at most 32 actions, and `cooldownMs` is at most 24 hours.
+- Leave optional fields out rather than sending them blank: an empty `avatarIds` or blank `releaseMatch` is rejected.
+- Addresses contain no whitespace and none of `# * , ? [ ] { }`.
 
 ## Parameter names
 

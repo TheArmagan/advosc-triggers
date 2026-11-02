@@ -1,0 +1,19 @@
+{
+    "name": "ADVOSC.Triggers.Editor",
+    "rootNamespace": "ADVOSC.Triggers.Editor",
+    "references": [
+        "ADVOSC.Triggers",
+        "com.vrcfury.api"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

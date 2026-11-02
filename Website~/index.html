@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'self'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      name="description"
+      content="Unity package that adds SPS sockets, plugs, Touch Zones and contacts to a VRChat avatar and sends ADVOSC matching rules."
+    />
+    <title>ADVOSC Triggers</title>
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <header>
+      <p class="eyebrow">Unity package for VRChat avatars</p>
+      <h1>ADVOSC Triggers</h1>
+      <p class="lead">
+        Adds SPS sockets, plugs, Touch Zones and contacts to an avatar, then hands
+        <a href="https://github.com/TheArmagan/advosc">ADVOSC</a> the rules that react to them.
+      </p>
+    </header>
+
+    <main>
+      <h2>Add the VPM listing</h2>
+      <p>This is the listing URL:</p>
+      <code class="url">https://thearmagan.github.io/advosc-triggers/index.json</code>
+      <a
+        class="button"
+        href="vcc://vpm/addRepo?url=https%3A%2F%2Fthearmagan.github.io%2Fadvosc-triggers%2Findex.json"
+        >Add to VCC</a
+      >
+      <p class="muted">
+        The button opens whichever app handles <code>vcc://</code> links. If nothing opens, add the
+        URL by hand.
+      </p>
+
+      <h2>Add it by hand</h2>
+      <ol>
+        <li>
+          In VCC or ALCOM, open the Packages section and choose Add Repository.
+        </li>
+        <li>Paste the listing URL above and confirm.</li>
+        <li>
+          Do the same with VRCFury's listing, <code>https://vcc.vrcfury.com</code>. ADVOSC Triggers
+          depends on VRCFury and can't resolve without it.
+        </li>
+        <li>Open your avatar project's packages and add ADVOSC Triggers.</li>
+      </ol>
+
+      <h2>Not using a package manager</h2>
+      <p>
+        Each <a href="https://github.com/TheArmagan/advosc-triggers/releases">release</a> also has a
+        <code>.unitypackage</code>. Install VRCFury and the VRChat Avatars SDK first, because a
+        <code>.unitypackage</code> can't pull them in.
+      </p>
+
+      <h2>Status</h2>
+      <p>
+        Version 0.1.0 hasn't been tested in VRChat. Reading SPS data over OSC is unproven, so socket
+        and plug rules may not fire yet.
+      </p>
+    </main>
+
+    <footer>
+      <p>
+        <a href="https://github.com/TheArmagan/advosc-triggers">Source</a>,
+        <a href="https://github.com/TheArmagan/advosc-triggers/releases">releases</a> and
+        <a href="https://github.com/TheArmagan/advosc">ADVOSC</a>. Licensed under MPL-2.0.
+      </p>
+    </footer>
+  </body>
+</html>

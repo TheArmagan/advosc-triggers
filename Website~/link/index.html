@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="referrer" content="no-referrer" />
+    <title>ADVOSC rules</title>
+    <link rel="stylesheet" href="../site.css" />
+    <script src="link.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <p class="eyebrow">ADVOSC rule link</p>
+      <h1 id="title">Reading link</h1>
+      <p class="lead" id="subtitle"></p>
+    </header>
+
+    <main id="content">
+      <noscript>
+        <div class="message">
+          <h2>This page needs JavaScript</h2>
+          <p>
+            The link's data stays in your browser, and a script reads it from the address bar. Turn
+            on JavaScript to see the rules.
+          </p>
+        </div>
+      </noscript>
+    </main>
+
+    <footer>
+      <p>
+        This page reads the link in your browser. The data after the # never reaches a server.
+      </p>
+      <p>
+        <a href="https://github.com/TheArmagan/advosc">Install ADVOSC</a>
+      </p>
+    </footer>
+  </body>
+</html>

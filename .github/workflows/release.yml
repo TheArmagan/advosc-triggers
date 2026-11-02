@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # zlib.crc32 in the archive script needs Node 22.2 or newer.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Build the VPM zip and .unitypackage
+        id: build
+        run: node .github/scripts/build-release.mjs --tag "$GITHUB_REF_NAME" --out dist
+
+      - name: Create the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ZIP: ${{ steps.build.outputs.zip }}
+          UNITYPACKAGE: ${{ steps.build.outputs.unitypackage }}
+          NOTES: ${{ steps.build.outputs.notes }}
+          PRERELEASE: ${{ steps.build.outputs.prerelease }}
+        run: |
+          flags=()
+          if [ "$PRERELEASE" = "true" ]; then flags+=(--prerelease); fi
+          gh release create "$GITHUB_REF_NAME" "$ZIP" "$UNITYPACKAGE" \
+            --verify-tag \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file "$NOTES" \
+            "${flags[@]}"
+
+      # A release made with GITHUB_TOKEN doesn't fire `release: published` in other workflows,
+      # so the listing has to be rebuilt by asking for it here.
+      - name: Rebuild the VPM listing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
