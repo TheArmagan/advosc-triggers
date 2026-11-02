@@ -11,12 +11,14 @@ Version 0.1.0 has not been run in game. Two things are unverified:
 - Whether VRChat sends VRCFury's `OGB/*` SPS floats over OSC. Socket and plug rules depend on this, and they won't fire if those values don't arrive.
 - The SPS depth formula, which hasn't been measured against real plug values. `depth`, `depthSelf`, `depthOthers` and `speed` may read wrong even if the data does arrive.
 
+New here? [Learn ADVOSC Triggers](LEARN_TRIGGERS.md) walks you through your first trigger, what each option does, and what to do when something doesn't work.
+
 ## Requirements
 
 - Unity 2022.3
 - VRChat Avatars SDK
 - VRCFury
-- ADVOSC, in a version with `advosc://` link support, on Windows
+- ADVOSC 1.1.0 or newer, on Windows
 
 ## Install
 
@@ -41,6 +43,8 @@ Version 0.1.0 has not been run in game. Two things are unverified:
 Install VRCFury and the VRChat Avatars SDK first, since a `.unitypackage` can't pull in dependencies. Then download the `.unitypackage` from [Releases](https://github.com/TheArmagan/advosc-triggers/releases) and import it. Files go to `Packages/rest.armagan.advosc-triggers/`.
 
 ## Usage
+
+[LEARN_TRIGGERS.md](LEARN_TRIGGERS.md) has the full walkthrough. In short:
 
 1. Add an `AdvoscTrigger` component to a GameObject under your avatar.
 2. Pick the kind, a preset if there is one, and who can fire it: Self, Others or Both. The default is Others.

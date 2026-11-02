@@ -34,7 +34,7 @@ namespace ADVOSC.Triggers.Editor {
         }
 
         private void OnGUI() {
-            avatar = (VRCAvatarDescriptor)EditorGUILayout.ObjectField("Avatar", avatar, typeof(VRCAvatarDescriptor), true);
+            avatar = (VRCAvatarDescriptor)EditorGUILayout.ObjectField(new GUIContent("Avatar", TriggerHelp.WindowAvatar), avatar, typeof(VRCAvatarDescriptor), true);
             if (avatar == null) {
                 EditorGUILayout.HelpBox("Pick an avatar in the scene.", MessageType.Info);
                 return;
@@ -65,7 +65,7 @@ namespace ADVOSC.Triggers.Editor {
         private static void DrawTrigger(AdvoscTrigger trigger) {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(TriggerNames.Display(trigger), ObjectNames.NicifyVariableName(trigger.kind.ToString()));
-            if (GUILayout.Button("Select", GUILayout.Width(60f))) {
+            if (GUILayout.Button(new GUIContent("Select", TriggerHelp.SelectButton), GUILayout.Width(60f))) {
                 Selection.activeGameObject = trigger.gameObject;
                 EditorGUIUtility.PingObject(trigger.gameObject);
             }

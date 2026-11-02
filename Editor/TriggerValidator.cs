@@ -85,6 +85,7 @@ namespace ADVOSC.Triggers.Editor {
                     CheckRadius(trigger, issues);
                     break;
                 case TriggerKind.ContactPreset:
+                    CheckOwnBody(trigger, issues);
                     CheckManualTarget(trigger, issues);
                     CheckPlan(trigger, issues);
                     break;
@@ -145,6 +146,11 @@ namespace ADVOSC.Triggers.Editor {
             if (!ContactPlan.TryCreate(trigger, out _, out var error)) {
                 Add(issues, trigger, IssueSeverity.Error, error);
             }
+        }
+
+        private static void CheckOwnBody(AdvoscTrigger trigger, List<TriggerIssue> issues) {
+            if (trigger.who == TriggerWho.Others || !ContactPresets.Get(trigger.preset).TouchedByOwnBody) return;
+            Add(issues, trigger, IssueSeverity.Warning, "Your own body is always inside this spot, so it would stay on. Set Who can trigger it to Other people.");
         }
 
         private static void CheckManualTarget(AdvoscTrigger trigger, List<TriggerIssue> issues) {

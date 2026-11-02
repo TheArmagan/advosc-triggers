@@ -86,10 +86,10 @@ namespace ADVOSC.Triggers.Editor {
         public override void OnInspectorGUI() {
             serializedObject.Update();
 
-            Popup(kind, new GUIContent("Type"), KindLabels);
-            EditorGUILayout.PropertyField(id, new GUIContent("ID", "Used in parameter names. Letters, numbers, - and _ only, and unique on this avatar."));
-            EditorGUILayout.PropertyField(displayName, new GUIContent("Display name", "Shown in ADVOSC and in the socket's menu entry. Optional."));
-            Popup(who, new GUIContent("Who can trigger it"), WhoLabels);
+            Popup(kind, new GUIContent("Type", TriggerHelp.Type), KindLabels);
+            EditorGUILayout.PropertyField(id, new GUIContent("ID", TriggerHelp.Id));
+            EditorGUILayout.PropertyField(displayName, new GUIContent("Display name", TriggerHelp.DisplayName));
+            Popup(who, new GUIContent("Who can trigger it", TriggerHelp.Who), WhoLabels);
 
             EditorGUILayout.Space();
             if (kind.hasMultipleDifferentValues) {
@@ -99,7 +99,7 @@ namespace ADVOSC.Triggers.Editor {
             }
 
             EditorGUILayout.Space();
-            Popup(starterRule, new GUIContent("Starter rule", "The rule this trigger adds in ADVOSC. Rules arrive turned off."), StarterLabels);
+            Popup(starterRule, new GUIContent("Starter rule", TriggerHelp.StarterRule), StarterLabels);
 
             serializedObject.ApplyModifiedProperties();
 
@@ -111,16 +111,16 @@ namespace ADVOSC.Triggers.Editor {
         private void DrawKindSettings(TriggerKind selected) {
             switch (selected) {
                 case TriggerKind.SpsSocket:
-                    Popup(socketMode, new GUIContent("Socket type"), SocketModeLabels);
+                    Popup(socketMode, new GUIContent("Socket type", TriggerHelp.SocketMode), SocketModeLabels);
                     EditorGUILayout.HelpBox("The socket sits at this object and points along its blue axis. VRCFury adds its own menu toggle for it.", MessageType.None);
                     break;
 
                 case TriggerKind.SpsPlug:
-                    EditorGUILayout.PropertyField(plugRenderer, new GUIContent("Plug mesh", "Leave empty to let VRCFury find the mesh from this object."));
+                    EditorGUILayout.PropertyField(plugRenderer, new GUIContent("Plug mesh", TriggerHelp.PlugMesh));
                     break;
 
                 case TriggerKind.TouchZone:
-                    EditorGUILayout.PropertyField(customRadius, new GUIContent("Radius (m)"));
+                    EditorGUILayout.PropertyField(customRadius, new GUIContent("Radius (m)", TriggerHelp.ZoneRadius));
                     break;
 
                 case TriggerKind.ContactPreset:
@@ -137,28 +137,30 @@ namespace ADVOSC.Triggers.Editor {
             var current = Array.FindIndex(ContactPresets.All, entry => (int)entry.Id == preset.enumValueIndex);
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = preset.hasMultipleDifferentValues;
-            var picked = EditorGUILayout.Popup(new GUIContent("Preset"), Math.Max(current, 0), PresetLabels);
+            var label = new GUIContent("Preset", TriggerHelp.Preset);
+            var picked = EditorGUILayout.Popup(label, Math.Max(current, 0), PresetLabels);
             EditorGUI.showMixedValue = false;
+            HoverWholeRow(label.tooltip);
             if (EditorGUI.EndChangeCheck()) {
                 preset.enumValueIndex = (int)ContactPresets.All[picked].Id;
             }
 
             if (ContactPresets.Get((ContactPresetId)preset.enumValueIndex).HasSides) {
-                EditorGUILayout.PropertyField(presetSide, new GUIContent("Side"));
+                EditorGUILayout.PropertyField(presetSide, new GUIContent("Side", TriggerHelp.Side));
             }
-            EditorGUILayout.PropertyField(presetRadiusScale, new GUIContent("Size", "1 is the preset's size for this avatar."));
-            EditorGUILayout.PropertyField(presetOffset, new GUIContent("Move by (m)", "X is the avatar's right, Y up, Z forward."));
-            EditorGUILayout.PropertyField(manualTarget, new GUIContent("Manual target", "Attach to this object instead of the humanoid bone. Use it when the bone can't be found."));
+            EditorGUILayout.PropertyField(presetRadiusScale, new GUIContent("Size", TriggerHelp.RadiusScale));
+            EditorGUILayout.PropertyField(presetOffset, new GUIContent("Move by (m)", TriggerHelp.Offset));
+            EditorGUILayout.PropertyField(manualTarget, new GUIContent("Manual target", TriggerHelp.ManualTarget));
         }
 
         private void DrawCustomContactSettings() {
-            EditorGUILayout.PropertyField(customShape, new GUIContent("Shape"));
-            EditorGUILayout.PropertyField(customRadius, new GUIContent("Radius (m)"));
+            EditorGUILayout.PropertyField(customShape, new GUIContent("Shape", TriggerHelp.CustomShape));
+            EditorGUILayout.PropertyField(customRadius, new GUIContent("Radius (m)", TriggerHelp.CustomRadius));
             if (customShape.enumValueIndex == (int)TriggerShape.Capsule) {
-                EditorGUILayout.PropertyField(customHeight, new GUIContent("Height (m)", "Runs along this object's green axis and includes the round ends."));
+                EditorGUILayout.PropertyField(customHeight, new GUIContent("Height (m)", TriggerHelp.CustomHeight));
             }
-            EditorGUILayout.PropertyField(customReceiverType, new GUIContent("Reports", "Proximity gives a 0 to 1 value for how close. Constant gives on or off."));
-            EditorGUILayout.PropertyField(customTags, new GUIContent("Touched by"), true);
+            EditorGUILayout.PropertyField(customReceiverType, new GUIContent("Reports", TriggerHelp.CustomReports));
+            EditorGUILayout.PropertyField(customTags, new GUIContent("Touched by", TriggerHelp.CustomTags), true);
             EditorGUILayout.HelpBox("Standard tags are Head, Torso, Hand, Foot and Finger.", MessageType.None);
         }
 
@@ -172,7 +174,7 @@ namespace ADVOSC.Triggers.Editor {
 
             if (trigger.kind == TriggerKind.ContactPreset && ContactPlan.TryCreate(trigger, out var plan, out _)) {
                 EditorGUILayout.Space();
-                EditorGUILayout.LabelField("Attached to", plan.AnchorDescription);
+                EditorGUILayout.LabelField(new GUIContent("Attached to", TriggerHelp.AttachedTo), new GUIContent(plan.AnchorDescription, TriggerHelp.AttachedTo));
             }
 
             var descriptor = trigger.GetComponentInParent<VRCAvatarDescriptor>(true);
@@ -188,9 +190,15 @@ namespace ADVOSC.Triggers.Editor {
             EditorGUI.showMixedValue = property.hasMultipleDifferentValues;
             var picked = EditorGUILayout.Popup(label, property.enumValueIndex, options);
             EditorGUI.showMixedValue = false;
+            HoverWholeRow(label.tooltip);
             if (EditorGUI.EndChangeCheck()) {
                 property.enumValueIndex = picked;
             }
+        }
+
+        /// <summary>A dropdown only shows its tooltip over the label, so this covers the field too.</summary>
+        private static void HoverWholeRow(string tooltip) {
+            GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent(string.Empty, tooltip));
         }
     }
 }

@@ -16,6 +16,9 @@ namespace ADVOSC.Triggers.Editor {
         /// <summary>Whether the side picker applies. Right flips the sign of Offset.x.</summary>
         public bool HasSides;
 
+        /// <summary>The wearer's own body is always inside this one, so it needs Others to ever turn off.</summary>
+        public bool TouchedByOwnBody;
+
         /// <summary>From the bone, in meters on the avatar's axes: X right, Y up, Z forward.</summary>
         public Vector3 Offset;
 
@@ -69,6 +72,7 @@ namespace ADVOSC.Triggers.Editor {
                 LeftBones = new[] { HumanBodyBones.LeftHand },
                 RightBones = new[] { HumanBodyBones.RightHand },
                 HasSides = true,
+                TouchedByOwnBody = true,
                 Offset = Vector3.zero,
                 Radius = 0.09f,
                 Tags = new[] { "Hand", "Finger" },
@@ -90,6 +94,7 @@ namespace ADVOSC.Triggers.Editor {
                 Label = "Hug",
                 LeftBones = new[] { HumanBodyBones.UpperChest, HumanBodyBones.Chest, HumanBodyBones.Spine },
                 RightBones = new[] { HumanBodyBones.UpperChest, HumanBodyBones.Chest, HumanBodyBones.Spine },
+                TouchedByOwnBody = true,
                 Offset = new Vector3(0f, 0f, 0.12f),
                 Radius = 0.22f,
                 Tags = new[] { "Torso", "Hand" },
@@ -101,6 +106,7 @@ namespace ADVOSC.Triggers.Editor {
                 LeftBones = new[] { HumanBodyBones.LeftFoot },
                 RightBones = new[] { HumanBodyBones.RightFoot },
                 HasSides = true,
+                TouchedByOwnBody = true,
                 Offset = new Vector3(0f, 0f, 0.06f),
                 Radius = 0.09f,
                 Tags = new[] { "Foot", "Hand" },

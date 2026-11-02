@@ -17,13 +17,13 @@ namespace ADVOSC.Triggers.Editor {
 
         public static void Draw(VRCAvatarDescriptor descriptor) {
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button(new GUIContent("Open in ADVOSC", "Sends this avatar's rules to ADVOSC for review. They arrive turned off."))) {
+            if (GUILayout.Button(new GUIContent("Open in ADVOSC", TriggerHelp.OpenInApp))) {
                 OpenInApp(descriptor);
             }
-            if (GUILayout.Button(new GUIContent("Copy link", "Copies a web link you can share."))) {
+            if (GUILayout.Button(new GUIContent("Copy link", TriggerHelp.CopyLink))) {
                 CopyLink(descriptor);
             }
-            if (GUILayout.Button(new GUIContent("Export .advosc.json", "Saves the rules as a file."))) {
+            if (GUILayout.Button(new GUIContent("Export .advosc.json", TriggerHelp.ExportFile))) {
                 ExportFile(descriptor);
             }
             EditorGUILayout.EndHorizontal();

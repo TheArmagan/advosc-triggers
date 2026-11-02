@@ -68,6 +68,7 @@ namespace ADVOSC.Triggers {
     /// so the avatar in the scene never changes. It is removed from uploads as an IEditorOnly.
     /// </summary>
     [AddComponentMenu("ADVOSC/ADVOSC Trigger")]
+    [HelpURL("https://github.com/TheArmagan/advosc-triggers/blob/main/LEARN_TRIGGERS.md")]
     public class AdvoscTrigger : MonoBehaviour, IEditorOnly {
         public const int MaxIdLength = 48;
 
