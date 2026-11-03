@@ -1,7 +1,7 @@
 {
   "name": "rest.armagan.advosc-triggers",
   "displayName": "ADVOSC Triggers",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "unity": "2022.3",
   "description": "Adds SPS sockets, plugs, Touch Zones and contacts to a VRChat avatar at build time, and exports matching rules for ADVOSC.",
   "license": "MPL-2.0",
