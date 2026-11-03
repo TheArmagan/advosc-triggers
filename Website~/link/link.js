@@ -148,6 +148,29 @@ function describeToy(action) {
   }
 }
 
+function describeVariableChange(name, op, value) {
+  switch (op) {
+    case "add":
+      return `Add ${value} to variable ${name}`;
+    case "subtract":
+      return `Subtract ${value} from variable ${name}`;
+    case "multiply":
+      return `Multiply variable ${name} by ${value}`;
+    case "divide":
+      return `Divide variable ${name} by ${value}`;
+    case "modulo":
+      return `Set variable ${name} to its remainder after dividing by ${value}`;
+    case "min":
+      return `Keep variable ${name} at most ${value}`;
+    case "max":
+      return `Keep variable ${name} at least ${value}`;
+    case "append":
+      return `Add ${value} to the end of variable ${name}`;
+    default:
+      return `Unknown change to variable ${name}. ADVOSC will reject this bundle.`;
+  }
+}
+
 function describeAction(action) {
   if (!isObject(action)) return "Unknown action. ADVOSC will reject this bundle.";
   const address = clean(action.address, MAX_ADDRESS_SHOWN);
@@ -160,6 +183,8 @@ function describeAction(action) {
       return `Send ${clean(action.oscType, 16)} ${value} to ${address}`;
     case "setVariable":
       return `Set variable ${clean(action.name, MAX_NAME_SHOWN)} to ${value}`;
+    case "changeVariable":
+      return describeVariableChange(clean(action.name, MAX_NAME_SHOWN), action.op, value);
     case "sound":
       return "Play a sound, which you pick in ADVOSC";
     case "toy":

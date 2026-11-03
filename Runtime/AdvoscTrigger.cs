@@ -61,7 +61,9 @@ namespace ADVOSC.Triggers {
         Empty,
         Toy,
         Variable,
-        SoundPlaceholder
+        SoundPlaceholder,
+        // Unity stores enums by index, so new choices go at the end.
+        Counter
     }
 
     /// <summary>

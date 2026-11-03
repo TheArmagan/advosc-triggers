@@ -39,7 +39,8 @@ namespace ADVOSC.Triggers.Editor {
             new GUIContent("Empty rule"),
             new GUIContent("Toy"),
             new GUIContent("Variable"),
-            new GUIContent("Sound (pick it in ADVOSC)")
+            new GUIContent("Sound (pick it in ADVOSC)"),
+            new GUIContent("Counter")
         };
 
         private static readonly GUIContent[] PresetLabels = Array.ConvertAll(

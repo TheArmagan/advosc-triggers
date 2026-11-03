@@ -43,7 +43,7 @@ Install VRCFury and the VRChat Avatars SDK first, since a `.unitypackage` can't 
 
 1. Add an `AdvoscTrigger` component to a GameObject under your avatar.
 2. Pick the kind, a preset if there is one, and who can fire it: Self, Others or Both. The default is Others.
-3. Pick a starter rule: empty, toy, variable or sound placeholder.
+3. Pick a starter rule: empty, toy, variable, counter or sound placeholder.
 4. Use one of the export buttons:
    - **Open in ADVOSC** sends the rules straight to the app.
    - **Copy link** gives you a link to share.
@@ -104,7 +104,7 @@ In ADVOSC:
 - Every rule is shown for review, and nothing is added until you accept.
 - Rules always arrive turned off.
 - Incoming rule ids are ignored and new ones are generated, so a link can't overwrite a rule you already have.
-- A strict allowlist applies, and anything outside it rejects the whole bundle. Sources must be avatar parameters or `/advosc/sps/` values. Actions are limited to `setParameter`, `setVariable`, `osc` under `/avatar/parameters/`, an empty sound placeholder, and limited toy actions.
+- A strict allowlist applies, and anything outside it rejects the whole bundle. Sources must be avatar parameters or `/advosc/sps/` values. Actions are limited to `setParameter`, `setVariable`, `changeVariable`, `osc` under `/avatar/parameters/`, an empty sound placeholder, and limited toy actions.
 - `{{` and `[[` are rejected in every string, because those placeholders can make network reads. Values in a link are literal.
 - Toy actions can't name a device and can't use stored patterns. Levels stay within 0 to 1, and durations are at most 60 seconds. The toy cap and panic hotkey in ADVOSC still apply.
 - Links are limited to a 16 KB payload, 256 KB of JSON after inflating, and 64 rules.

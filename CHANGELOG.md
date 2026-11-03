@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 (2026-11-03)
+
+### Added
+
+- Counter starter rule: adds 1 to a variable each time the trigger fires. Needs ADVOSC 1.2.0 or newer.
+- `changeVariable` in the bundle format, and the link page describes it.
+
 ## 0.2.0 (2026-11-02)
 
 ### Added

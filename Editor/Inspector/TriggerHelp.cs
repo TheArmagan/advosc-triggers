@@ -39,7 +39,8 @@ namespace ADVOSC.Triggers.Editor {
             "Empty rule: the trigger with no action. You add the action in ADVOSC.\n" +
             "Toy: sockets and plugs follow depth, other triggers give a short pulse.\n" +
             "Variable: stores the 0 to 1 value under this trigger's name, for chatbox text.\n" +
-            "Sound: plays a sound. You pick the file in ADVOSC.";
+            "Sound: plays a sound. You pick the file in ADVOSC.\n" +
+            "Counter: adds 1 to a variable under this trigger's name each time it fires.";
 
         public const string SocketMode =
             "How VRCFury sets up the socket. This decides how plugs line up with it.\n\n" +

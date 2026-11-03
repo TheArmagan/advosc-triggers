@@ -94,6 +94,29 @@ namespace ADVOSC.Triggers.Editor {
         }
     }
 
+    /// <summary>Does math on a variable's current value. An unset variable counts as 0.</summary>
+    internal sealed class ChangeVariableAction : BundleAction {
+        public const string OpAdd = "add";
+
+        public string Name;
+        public string Op = OpAdd;
+        /// <summary>A number for every op except append, or ADVOSC rejects the bundle.</summary>
+        public string Value;
+
+        public override void Write(JsonWriter json) {
+            json.BeginObject();
+            json.Key("type");
+            json.Value("changeVariable");
+            json.Key("name");
+            json.Value(Name);
+            json.Key("op");
+            json.Value(Op);
+            json.Key("value");
+            json.Value(Value);
+            json.EndObject();
+        }
+    }
+
     /// <summary>Carries no sound. ADVOSC shows "Pick a sound" until the user sets one.</summary>
     internal sealed class SoundPlaceholderAction : BundleAction {
         public override void Write(JsonWriter json) {

@@ -139,6 +139,9 @@ This picks the rule a trigger adds to ADVOSC. You can change the rule in ADVOSC 
 | Toy | Sockets and plugs make a toy follow depth. Other triggers give a 1 second pulse |
 | Variable | The 0 to 1 value is stored under the trigger's display name |
 | Sound | Plays a sound. Pick the file in ADVOSC. The rule shows "Pick a sound" until you do |
+| Counter | Adds 1 to a variable under the trigger's display name each time it fires, so you can count headpats |
+
+Counter needs ADVOSC 1.2.0 or newer. Older versions reject the bundle.
 
 To show a variable in your chatbox, add it to your template. For a trigger named Headpat:
 

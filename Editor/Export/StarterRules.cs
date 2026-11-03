@@ -139,6 +139,9 @@ namespace ADVOSC.Triggers.Editor {
                     // ADVOSC ignores this value on a live rule and sends the mapped number instead.
                     return AddAction(LiveRule(source), new SetVariableAction { Name = VariableName(source), Value = "0" });
 
+                case StarterRuleChoice.Counter:
+                    return AddAction(EdgeRule(source), new ChangeVariableAction { Name = VariableName(source), Value = "1" });
+
                 case StarterRuleChoice.SoundPlaceholder:
                     return AddAction(EdgeRule(source), new SoundPlaceholderAction());
 

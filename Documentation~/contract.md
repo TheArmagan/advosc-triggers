@@ -56,7 +56,8 @@ Anything else makes ADVOSC reject the whole bundle.
 |---|---|
 | `setParameter` | `address` under `/avatar/parameters/`, literal `value` |
 | `osc` | `address` under `/avatar/parameters/`, `oscType` of `Float`, `Int` or `Bool`, literal `value` |
-| `setVariable` | `name`, literal `value` |
+| `setVariable` | `name`, literal `value`. `$value` in it is replaced with the variable's current value. |
+| `changeVariable` | `name`, `op` of `add`, `subtract`, `multiply`, `divide`, `modulo`, `min`, `max` or `append`, literal `value`. Every `op` except `append` needs `value` to be a number. Not on `live`. |
 | `sound` | Placeholder only: `soundIds` and `soundNames` must be empty. `loop` and `stopOnEnd` are booleans. |
 | `toy` | `action.kind` of `link` (only on `live`), `pulse`, `preset` or `stop`. `target.toyIds` must be `[]`. Never `pattern`. |
 
